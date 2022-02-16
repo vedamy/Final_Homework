@@ -1,21 +1,24 @@
 #!/usr/bin/env python
+
+# import sys because we need to read and write data to STDIN and STDOUT
 import sys
 
-# stdin = standard input
+# reading entire line from STDIN (standard input)
 for line in sys.stdin:
+	# to remove leading and trailing whitespace
+	line = line.strip()
 
-    #strip white spaces at begining and end of line
-    line = line.strip()
+	# split the line into words
+	words = line.split()
 
-    #split each line up
-    words = line.split()
+	# process each word and assign a value of 1 to each word
+	for word in words:
+		print(word +"\t1")
+	
+	
+	
 
-    #process each word and assign a value of 1 to each word
-    for word in words:
-        print(word + '\t1')
 
 
 
-#mapper - breaking up words into units
 
-#echo 'a quick brown fox jumps over a lazy dog'|./mapper.py

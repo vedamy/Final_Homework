@@ -1,40 +1,37 @@
 #!/usr/bin/env python
+
+from operator import itemgetter
 import sys
 
 current_word = None
 current_count = 0
 word = None
-#take all the words from the mapper and count them
 
-#lines passed from the mapper.py program
+# read the entire line from STDIN
 for line in sys.stdin:
-    line = line.strip()
+	# remove leading and trailing whitespace
+	line = line.strip()
+	# splitting the data on the basis of tab we have provided in mapper.py
+	word, count = line.split('\t', 1)
+	# convert count (currently a string) to int
+	try:
+		count = int(count)
+	except ValueError:
+		# count was not a number, so silently
+		# ignore/discard this line
+		continue
 
-    word, count = line.split("\t",1)
+	# this IF-switch only works because Hadoop sorts map output
+	# by key (here: word) before it is passed to the reducer
+	if current_word == word:
+		current_count += count
+	else:
+		if current_word:
+			# write result to STDOUT
+			print('%s\t%s' % (current_word, current_count))
+		current_count = count
+		current_word = word
 
-    count = int(count)
-
-    #sorted values from command line are passed, and
-    # if we have multiple of the same word, we increment the count per instance of the word
-    if current_word == word:
-        current_count += count
-
-    else:
-        #if there is a current word and its not None (which was how we instantiated it)
-        if current_word:
-            print(current_word + "\t" + str(current_count))
-        
-        current_count = count
-        current_word = word
-        
-        #print("current_word: "+ current_word)
-
+# do not forget to output the last word if needed!
 if current_word == word:
-    print(current_word + "\t" + str(current_count))
-
-
-    
-
-
-#echo 'a quick brown fox jumps over a lazy dog'|./mapper.py|sort|./reducer.py
-#cat ../cats_txt.txt|./mapper.py|sort|./reducer.py
+	print('%s\t%s' % (current_word, current_count))
