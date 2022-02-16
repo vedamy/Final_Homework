@@ -17,3 +17,5 @@ for line in sys.stdin:
 
 
 #mapper - breaking up words into units
+
+#echo 'a quick brown fox jumps over a lazy dog'|./mapper.py
